@@ -1,5 +1,6 @@
 {
   "name": "worm",
+  "private": true,
   "version": "0.0.1",
   "devDependencies": {
     "typescript": "^3.7.5"
