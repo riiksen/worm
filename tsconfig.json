@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "declaration": true,
+    "module": "commonjs",
+    "outDir": "build",
+    "strict": true
+  },
+  "include": [
+    "src/**/*.ts"
+  ]
+}
