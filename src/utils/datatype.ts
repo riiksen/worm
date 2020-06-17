@@ -1,6 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AnyType = DataType<any>;
-
 /**
  * Class that holds database types mapped to types in typescript
  *
@@ -22,3 +19,6 @@ export class DataType<Type> {
     return new DataType<string>('string');
   };
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyType = DataType<any>;
