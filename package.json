@@ -2,6 +2,9 @@
   "name": "worm",
   "private": true,
   "version": "0.0.1",
+  "scripts": {
+    "lint": "eslint --ext .ts src"
+  },
   "dependencies": {
     "pg": "^8.0.3",
     "reflect-metadata": "^0.1.13"
