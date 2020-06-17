@@ -11,8 +11,8 @@ export class ConnectionManager {
   public connections: Connection[] = [];
 
   /**
-   * @param {string} [name=default] - Name of connection
-   * @returns {Connection} - Connection
+   * @param name [name=default] - Name of connection
+   * @returns connection
    */
   static get(name = 'default'): Connection {
     const connection = this.prototype.connections.find((conn) => conn.name === name);
