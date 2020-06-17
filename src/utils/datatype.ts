@@ -40,8 +40,6 @@ export class DataType<Type> {
     this.isNullable = true;
 
     return this;
-
-    // return new DataType<Type | undefined>({ type: this.type, nullable: true });
   }
 }
 
