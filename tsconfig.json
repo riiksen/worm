@@ -1,10 +1,20 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
+    "allowSyntheticDefaultImports": true,
     "declaration": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "lib": ["ESNext"],
     "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
     "outDir": "build",
-    "strict": true
+    "pretty": true,
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "target": "ES6"
   },
   "include": [
     "src/**/*.ts"
