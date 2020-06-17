@@ -1,7 +1,7 @@
 import { DataType } from './datatype';
 
 /**
- * Class that contains a table field definition
+ * Field that contains a table column definition
  */
 export class Field<Type> {
   /**
@@ -20,4 +20,5 @@ export class Field<Type> {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyField = Field<any>
