@@ -2,9 +2,13 @@
   "compilerOptions": {
     "baseUrl": "./",
     "declaration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "incremental": true,
     "module": "commonjs",
     "outDir": "build",
-    "strict": true
+    "strict": true,
+    "target": "es2019"
   },
   "include": [
     "src/**/*.ts"
