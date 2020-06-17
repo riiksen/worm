@@ -20,6 +20,7 @@ plugins:
   - '@typescript-eslint'
 
 rules:
+  arrow-body-style: off
   class-methods-use-this: off
   import/extensions:
     - error
@@ -29,6 +30,7 @@ rules:
 
   import/prefer-default-export: off
   max-len: [error, 100]
+  new-parens: [error, never]
   no-duplicate-imports: error
   no-multiple-empty-lines:
     - error
