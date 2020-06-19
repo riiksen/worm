@@ -1,5 +1,9 @@
 import { DataType } from './datatype';
 
+export type ExtractTypeFromField<FieldT> = (
+  FieldT extends Field<infer Type> ? Type : never
+);
+
 /**
  * Field that contains a table column definition
  */
