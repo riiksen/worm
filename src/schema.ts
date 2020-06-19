@@ -63,7 +63,7 @@ export class Schema {
       };
     }, {} as Record<keyof TableColumns, AnyField>);
 
-    const table = new Table({ name, fields });
+    const table = new Table(name, fields);
 
     this.tables = { ...this.tables, [name]: table };
 

@@ -15,8 +15,8 @@ export class Table {
    */
   public fields: Record<string, AnyField>;
 
-  constructor(args: { name: string, fields: Record<string, AnyField> }) {
-    this.name = args.name;
-    this.fields = args.fields;
+  constructor(name: string, fields: Record<string, AnyField>) {
+    this.name = name;
+    this.fields = fields;
   }
 }
