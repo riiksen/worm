@@ -10,31 +10,6 @@ import {
   Table,
 } from '../src';
 
-// interface User extends IUserTable {
-//   fields: FieldDefinition[];
-// }
-
-// export interface IUserTable extends DefaultTable {
-//   fields: {
-//     username?: string;
-//     steamid?: string;
-//     id: number;
-//   }
-// }
-
-// export const UserTable = createTable<IUserTable>('users', (t: TableMigratorInterface): void => {
-//   t.integer('id');
-//   t.string('username');
-//   t.string('steamid');
-// });
-
-// export const UserTable2 = createTableFromColumnMap('users', {
-//   id: DT.integer(),
-//   username: DT.string(),
-//   steamid: DT.string(),
-// });
-
-
 // TODO: name
 type FieldMapNW<TableT extends Table> = {
   [K in keyof TableT['fields']]: ExtractTypeFromField<TableT['fields'][K]>;
@@ -47,11 +22,6 @@ const schema = defineSchema({ version: 2020_04_21_132109 })
     username: DT.string(),
     email: DT.string(),
   });
-  // .createTable('tests', {
-  //   id: DT.integer(),
-  //   test1: DT.string(),
-  //   test2: DT.integer(),
-  // });
 
 async function go() {
   await initialize({
@@ -62,7 +32,6 @@ async function go() {
   });
 
   type UserTable = typeof schema['tables']['users'];
-  // type TestTable = typeof schema['tables']['tests'];
 
   interface User extends FieldMapNW<UserTable> {}
 
@@ -90,8 +59,6 @@ async function go() {
 
   console.log('changeset: ', user.changeset());
 
-  // user.save();
-
   const test = new Test;
 
   console.log('changeset: ', test.changeset())
@@ -100,8 +67,6 @@ async function go() {
   test.test2 = 1234;
 
   console.log('changeset: ', test.changeset());
-
-  // test.save();
 }
 
 go();
