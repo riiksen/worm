@@ -5,8 +5,9 @@ type ConstructorType<C> = { new (): C };
  */
 export function withMixins<M>(
   mixins: ConstructorType<M>[],
-): (targetClass: any) => void {
-  return (targetClass: any): void => {
+) {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  return <T>(targetClass: Function & { prototype: T }): void => {
     mixins.forEach((mixin: { new (): M }): void => {
       Object.getOwnPropertyNames(mixin.prototype).forEach((propertyName: string): void => {
         const propertyDescriptor = Object.getOwnPropertyDescriptor(mixin.prototype, propertyName);
