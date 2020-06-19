@@ -14,9 +14,9 @@ export class Field<Type> {
    */
   public readonly type: DataType<Type>;
 
-  constructor(args: { name: string, type: DataType<Type> }) {
-    this.name = args.name;
-    this.type = args.type;
+  constructor(name: string, type: DataType<Type>) {
+    this.name = name;
+    this.type = type;
   }
 }
 
