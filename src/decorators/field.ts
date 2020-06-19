@@ -1,5 +1,5 @@
 import { BaseModel } from '../model';
-import { DataType, FieldDefinition } from '../utils';
+import { AnyField, DataType, FieldDefinition } from '../utils';
 
 interface FieldDecoratorOptions {
   fieldName?: string;
@@ -10,7 +10,7 @@ interface FieldDecoratorOptions {
  * @param options - optional field options
  */
 export function Field(options?: FieldDecoratorOptions) {
-  return <M extends BaseModel>(target: M, propertyKey: string) => {
+  return <M extends BaseModel>(target: M, propertyKey: string): void => {
     const type = Reflect.getMetadata('design:type', target, propertyKey).name;
 
     if (!type) {
@@ -18,15 +18,8 @@ export function Field(options?: FieldDecoratorOptions) {
       throw new Error('type not detected from metadata');
     }
 
-    let fields = target.constructor.fields ? target.constructor.fields : {} as Record<string, FieldDefinition<any>>;
-
-    let fieldName: string;
-
-    if (options) {
-      fieldName = options.fieldName ? options.fieldName : propertyKey;
-    } else {
-      fieldName = propertyKey;
-    }
+    const fields = target.constructor.fields || {} as Record<string, AnyField>;
+    const fieldName = options?.fieldName || propertyKey;
 
     fields[fieldName] = new FieldDefinition(
       fieldName,
