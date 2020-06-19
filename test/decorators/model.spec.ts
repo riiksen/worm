@@ -16,6 +16,6 @@ describe(Model, () => {
   });
 
   test('Should set model name to lowercase class name if not provided', () => {
-    expect(User.tableName).toEqual('user');
+    expect(User.tableName).toEqual('users');
   });
 });
