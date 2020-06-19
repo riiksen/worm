@@ -1,7 +1,7 @@
 import {
   AnyField,
   AnyType,
-  // Field,
+  Field,
   // DataType,
   Table,
 } from './utils';
@@ -52,15 +52,15 @@ export class Schema {
   ): (
     MergeSchemaWithTable<this, TableName, TableColumns>
   ) {
-    const columnNames = Object.keys(columnMap) as (keyof TableColumns)[];
+    const columnNames = Object.keys(columnMap);
 
     const fields = columnNames.reduce((acc, columnName) => {
       return {
         ...acc,
-        [columnName]: {
+        [columnName]: new Field({
           name: columnName,
           type: columnMap[columnName],
-        },
+        }),
       };
     }, {} as Record<keyof TableColumns, AnyField>);
 
