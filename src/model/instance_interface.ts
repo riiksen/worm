@@ -9,9 +9,13 @@ export type FieldMap<Fields extends Table['fields']> = {
   [K in keyof Fields]: Field<Fields[K]>;
 };
 
-// TODO:
-// - Move tableName to a static property
-// - Change attributes to just fields
+/**
+ * Properties that any Model will include while extending a BaseModel
+ *
+ * TODO:
+ * - Move tableName to a static property
+ * - Change attributes to just fields
+ */
 export interface ModelInstanceInterface<TableT extends Table=Table> {
   attributes: FieldMap<TableT['fields']>;
   fields: TableT['fields'];
