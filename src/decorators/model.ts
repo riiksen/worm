@@ -1,5 +1,6 @@
 import { container } from '../container';
 import { BaseModel, FieldMap, ModelClassInterface } from '../model';
+import { Table } from '../utils';
 // import { withMixins } from './with_mixins';
 
 type ExtractTable<M> = (M extends BaseModel<infer Table> ? Table : never);
@@ -38,9 +39,14 @@ export function Model(options?: ModelDecoratorOptions) {
 
     Object.defineProperties(targetModel, propertyDescriptors);
 
-    const { schema } = container;
+    let modelTable: Table | undefined;
 
-    const modelTable = schema.getTableWithName(optionsWithDefaults.tableName);
+    try {
+      const { schema } = container;
+      modelTable = schema.getTableWithName(optionsWithDefaults.tableName);
+    } catch (e) {
+      modelTable = undefined;
+    }
 
     let attributes: FieldMap<(typeof BaseModel)['fields']>;
     let fieldNames;
