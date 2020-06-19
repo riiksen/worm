@@ -2,12 +2,16 @@ import { Field } from './Field';
 
 export abstract class Table {
 
+  ['constructor']: typeof Table;
+
   /**
    * Table name
    */
-  public name: string;
+  public static tableName: string;
 
-
-  public fields: Record<string, Field<any>> = {};
+  /**
+   * A record of table fields, mapped as fieldName: fieldData
+   */
+  public static fields: Record<string, Field<any>>;
 
 }
