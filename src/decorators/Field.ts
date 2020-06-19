@@ -1,4 +1,4 @@
-import { Model } from '../model/Model';
+import { BaseModel } from '../model/BaseModel';
 import { Field as FieldClass } from '../utils/Field';
 import { DataType } from '../utils/Datatypes';
 
@@ -7,36 +7,37 @@ interface FieldDecoratorOptions {
   nullable?: boolean;
 }
 
-
-// TODO: fix decorator, there is an error, beacuse of target
-// is without properties
 /**
- * @param options - field options
+ * @param options - optional field options
  */
 export function Field(options?: FieldDecoratorOptions) {
-  return <T extends Model>(target: T, propertyKey: string) => {
-    let type = Reflect.getMetadata('design:type', target, propertyKey);
-
+  return <M extends BaseModel>(target: M, propertyKey: string) => {
+    let type = Reflect.getMetadata('design:type', target, propertyKey).name;
     if (Array.isArray(propertyKey)) {
       type = 'Array';
     }
-
     if (!type) {
       // TODO: create custom type
       throw new Error('type not detected from metadata');
     }
+    let fields = target.constructor.fields ? target.constructor.fields : {} as Record<string, FieldClass<any>>;
+
     if (options) {
       const fieldName = options.fieldName ? options.fieldName : propertyKey;
-  
-      target.fields[fieldName] = new FieldClass({
-        name: fieldName,
-        type: DataType.type(type),
-      })
+
+      fields[fieldName] = new FieldClass(
+        fieldName,
+        DataType.type(type),
+      );
     } else {
-      target.fields[propertyKey] = new FieldClass({
-        name: propertyKey,
-        type: DataType.type(type),
-      })
+      fields[propertyKey] = new FieldClass(
+        propertyKey,
+        DataType.type(type),
+      );
     }
-  }
+
+    Object.defineProperty(target.constructor, 'fields', {
+      value: fields,
+    });
+  };
 }
