@@ -2,17 +2,26 @@ import { Dirty } from './dirty';
 import { ModelInstanceInterface } from './instance_interface';
 import { Persistence } from './persistence';
 
-import { Table } from '../utils';
+import { AnyField, Table } from '../utils';
 import { withMixins } from '../decorators/with_mixins';
 
-export interface Model<TableT extends Table=Table> extends
+export interface BaseModel<TableT extends Table=Table> extends
   ModelInstanceInterface<TableT>,
   Dirty<TableT>,
   Persistence<TableT> {}
 
-// TODO Add static fields property
 @withMixins([Dirty, Persistence])
-export abstract class Model<TableT extends Table=Table> {
+export abstract class BaseModel<TableT extends Table=Table> {
+  ['constructor']: typeof BaseModel;
+
+  /**
+   * A record of table columns, mapped as ColumnName => ColumnData
+   */
+  public static fields: Record<string, AnyField>;
+
+  /**
+   * Table name of the Model
+   */
   public static tableName: string;
 
   // TODO: Maybe move that to a constructor

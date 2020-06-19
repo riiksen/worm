@@ -1,8 +1,7 @@
 import {
   AnyField,
   AnyType,
-  Field,
-  // DataType,
+  FieldDefinition,
   Table,
 } from './utils';
 
@@ -57,10 +56,10 @@ export class Schema {
     const fields = columnNames.reduce((acc, columnName) => {
       return {
         ...acc,
-        [columnName]: new Field({
-          name: columnName,
-          type: columnMap[columnName],
-        }),
+        [columnName]: new FieldDefinition(
+          columnName,
+          columnMap[columnName],
+        ),
       };
     }, {} as Record<keyof TableColumns, AnyField>);
 
@@ -72,7 +71,7 @@ export class Schema {
   }
 
   // TODO: Name of this function
-  public getTableWithName = (modelName: string): Table => {
+  public getTableWithName = (modelName: string): Table | undefined => {
     return this.tables[modelName];
   };
 }

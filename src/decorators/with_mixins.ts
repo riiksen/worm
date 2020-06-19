@@ -1,7 +1,7 @@
 type ConstructorType<C> = { new (): C };
 
 /**
- * Function that copies properties from classes in minins to a targetClass
+ * Function that copies properties from classes in mixins array to a targetClass
  */
 export function withMixins<M>(
   mixins: ConstructorType<M>[],

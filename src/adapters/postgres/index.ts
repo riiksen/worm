@@ -21,9 +21,8 @@ export class PostgresAdapter extends BaseAdapter {
     await this.connection.connect();
   }
 
-  // TODO: Implement
   async disconnect(): Promise<void> {
-    throw new Error('No implementation');
+    await this.connection.end();
   }
 
   // TODO: Implement

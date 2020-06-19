@@ -1,19 +1,19 @@
-import { ExtractTypeFromField, Table } from '../utils';
+import { AnyField, ExtractTypeFromField, Table } from '../utils';
 
-interface Field<Field> {
+interface Field<Field extends AnyField> {
   changed: boolean;
   value: ExtractTypeFromField<Field>;
 }
 
-export type FieldMap<TableT extends Table> = {
-  [K in keyof TableT['fields']]: Field<TableT['fields'][K]>;
+export type FieldMap<Fields extends Table['fields']> = {
+  [K in keyof Fields]: Field<Fields[K]>;
 };
 
 // TODO:
 // - Move tableName to a static property
 // - Change attributes to just fields
 export interface ModelInstanceInterface<TableT extends Table=Table> {
-  attributes: FieldMap<TableT>;
+  attributes: FieldMap<TableT['fields']>;
   fields: TableT['fields'];
   tableName: string;
   newRecord: boolean;

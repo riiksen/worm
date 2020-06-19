@@ -2,8 +2,9 @@
 import {
   defineSchema,
   initialize,
-  model,
   Model,
+  Field,
+  BaseModel,
   DataType as DT,
   ExtractTypeFromField,
   Table,
@@ -45,12 +46,12 @@ const schema = defineSchema({ version: 2020_04_21_132109 })
     id: DT.integer(),
     username: DT.string(),
     email: DT.string(),
-  })
-  .createTable('tests', {
-    id: DT.integer(),
-    test1: DT.string(),
-    test2: DT.integer(),
   });
+  // .createTable('tests', {
+  //   id: DT.integer(),
+  //   test1: DT.string(),
+  //   test2: DT.integer(),
+  // });
 
 async function go() {
   await initialize({
@@ -61,39 +62,46 @@ async function go() {
   });
 
   type UserTable = typeof schema['tables']['users'];
-  type TestTable = typeof schema['tables']['tests'];
+  // type TestTable = typeof schema['tables']['tests'];
 
   interface User extends FieldMapNW<UserTable> {}
 
-  @model
-  class User extends Model<UserTable> {}
+  @Model()
+  class User extends BaseModel<UserTable> {}
 
-  interface Test extends FieldMapNW<TestTable> {}
+  @Model()
+  class Test extends BaseModel {
+    @Field()
+    public id!: number;
 
-  @model
-  class Test extends Model<TestTable> {}
+    @Field()
+    public test1!: string;
+
+    @Field()
+    public test2!: number;
+  }
 
   const user = new User;
 
-  console.log(user.changeset())
+  console.log('changeset: ', user.changeset())
 
   user.username = 'asdf';
   user.email = '12361923681';
 
-  console.log(user.changeset());
+  console.log('changeset: ', user.changeset());
 
-  user.save();
+  // user.save();
 
   const test = new Test;
 
-  console.log(test.changeset())
+  console.log('changeset: ', test.changeset())
 
   test.test1 = 'asdf';
   test.test2 = 1234;
 
-  console.log(test.changeset());
+  console.log('changeset: ', test.changeset());
 
-  test.save();
+  // test.save();
 }
 
 go();

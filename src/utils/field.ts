@@ -1,13 +1,13 @@
 import { DataType } from './datatype';
 
 export type ExtractTypeFromField<FieldT> = (
-  FieldT extends Field<infer Type> ? Type : never
+  FieldT extends FieldDefinition<infer Type> ? Type : never
 );
 
 /**
- * Field that contains a table column definition
+ * FieldDefinition that contains a table column definition
  */
-export class Field<Type> {
+export class FieldDefinition<Type> {
   /**
    * Name of the column
    */
@@ -18,11 +18,11 @@ export class Field<Type> {
    */
   public readonly type: DataType<Type>;
 
-  constructor(args: { name: string, type: DataType<Type> }) {
-    this.name = args.name;
-    this.type = args.type;
+  constructor(name: string, type: DataType<Type>) {
+    this.name = name;
+    this.type = type;
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type AnyField = Field<any>
+export type AnyField = FieldDefinition<any>

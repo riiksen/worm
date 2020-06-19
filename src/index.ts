@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { BaseAdapter, PostgresConnectionParameters } from './adapters';
 import { container } from './container';
 import { Schema } from './schema';
@@ -43,6 +45,7 @@ export async function initialize({
 }
 
 export * from './decorators';
+// export * from './errors';
 export * from './model';
 export * from './schema';
 export * from './utils';
