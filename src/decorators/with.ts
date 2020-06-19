@@ -3,7 +3,7 @@ type ConstructorType<C> = { new (): C };
 /**
  * Function that copies properties from classes in mixins array to a targetClass
  */
-export function withMixins<M>(
+export function With<M>(
   mixins: ConstructorType<M>[],
 ) {
   // eslint-disable-next-line @typescript-eslint/ban-types

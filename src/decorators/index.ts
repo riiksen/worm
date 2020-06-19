@@ -1,3 +1,3 @@
 export * from './field';
 export * from './model';
-export * from './with_mixins';
+export * from './with';

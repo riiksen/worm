@@ -3,14 +3,14 @@ import { ModelInstanceInterface } from './instance_interface';
 import { Persistence } from './persistence';
 
 import { AnyField, Table } from '../utils';
-import { withMixins } from '../decorators/with_mixins';
+import { With } from '../decorators/with';
 
 export interface BaseModel<TableT extends Table=Table> extends
   ModelInstanceInterface<TableT>,
   Dirty<TableT>,
   Persistence<TableT> {}
 
-@withMixins([Dirty, Persistence])
+@With([Dirty, Persistence])
 export abstract class BaseModel<TableT extends Table=Table> {
   ['constructor']: typeof BaseModel;
 
