@@ -7,7 +7,7 @@ import {
 } from './utils';
 
 // TODO: Move that to a different file
-type Merga<T> = (
+type Merge<T> = (
   {
     [K in keyof T]: T[K]
   }
@@ -18,7 +18,7 @@ type MergeSchemaWithTable<
   TableName extends string,
   TableColumn extends Record<string, AnyType>
 > = (
-  Merga<{
+  Merge<{
     version: SchemaT['version'];
     tables: {
       [Name in (keyof SchemaT['tables']) & TableName]: {
