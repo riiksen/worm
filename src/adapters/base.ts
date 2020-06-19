@@ -3,4 +3,8 @@
  */
 export abstract class BaseAdapter {
   abstract async connect(): Promise<void>;
+
+  abstract async disconnect(): Promise<void>;
+
+  abstract async reconnect(): Promise<void>;
 }
