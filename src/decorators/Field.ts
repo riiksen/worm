@@ -13,9 +13,6 @@ interface FieldDecoratorOptions {
 export function Field(options?: FieldDecoratorOptions) {
   return <M extends BaseModel>(target: M, propertyKey: string) => {
     let type = Reflect.getMetadata('design:type', target, propertyKey).name;
-    if (Array.isArray(propertyKey)) {
-      type = 'Array';
-    }
     if (!type) {
       // TODO: create custom type
       throw new Error('type not detected from metadata');

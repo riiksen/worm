@@ -23,11 +23,11 @@ describe(Field, () => {
     });
   });
 
-  describe('#Username', () => {
+  describe('#username', () => {
     it('User.fields should have user_name property', () => {
       expect(User.fields).toHaveProperty('user_name');
     });
-    it('User.fields should have Username property which is Field instance with type String', () => {
+    it('User.fields should have user_name property which is Field instance with type String', () => {
       expect(User.fields.user_name).toBeInstanceOf(FieldClass);
       expect(User.fields.user_name.type.type).toEqual('String');
     });
