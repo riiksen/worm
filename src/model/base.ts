@@ -17,7 +17,7 @@ export abstract class BaseModel<TableT extends Table=Table> {
   /**
    * A record of table columns, mapped as ColumnName => ColumnData
    */
-  public static fields: Record<string, AnyField>;
+  public static fields: Record<string, AnyField> = {};
 
   /**
    * Table name of the Model
