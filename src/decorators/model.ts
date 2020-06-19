@@ -1,9 +1,6 @@
-import { BaseModel } from '../model';
-import { FieldMap } from '../model/instance_interface';
 import { container } from '../container';
+import { BaseModel, FieldMap, ModelClassInterface } from '../model';
 // import { withMixins } from './with_mixins';
-
-type ConstructorType<M> = { new (): M };
 
 type ExtractTable<M> = (M extends BaseModel<infer Table> ? Table : never);
 
@@ -17,8 +14,8 @@ export interface ModelDecoratorOptions {
 }
 /* eslint-disable no-param-reassign */
 export function Model(options?: ModelDecoratorOptions) {
-  return <M extends BaseModel, Table extends ExtractTable<M>>(
-    targetModel: ConstructorType<M> & M,
+  return <M extends BaseModel, TableT extends ExtractTable<M>>(
+    targetModel: ModelClassInterface<M>,
   ): void => {
     // const mixins = withMixins([BaseModel]);
     // mixins(targetModel);
