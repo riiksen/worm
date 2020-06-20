@@ -5,7 +5,7 @@
 export interface PostgresConnectionParameters {
   host?: string;
   port?: number;
-  username?: string;
+  user?: string;
   password?: string;
   database?: string;
 }
