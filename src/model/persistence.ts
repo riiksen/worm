@@ -9,14 +9,10 @@ export interface Persistence<
 
 export class Persistence<TableT extends Table=Table> {
   // TODO: Add pre save and post save hooks
-  public async save(): Promise<void> {
+  public save(): Promise<void> {
     // If it is a new record (it hasn't been fetched from the datastore) save
     // should insert new record into datastore otherwise it should update it
-    if (this.newRecord) {
-      this.insert();
-    } else {
-      this.update();
-    }
+    return this.newRecord ? this.insert() : this.update();
   }
 
   // TODO: Implement

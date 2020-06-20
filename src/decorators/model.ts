@@ -88,7 +88,7 @@ export function Model(options?: ModelDecoratorOptions) {
     fieldNames.forEach((fieldName) => {
       Object.defineProperty(targetModel.prototype, fieldName, {
         get(): TableT['fields'][typeof fieldName] {
-          return this.attributes[fieldName];
+          return this.attributes[fieldName].value;
         },
         set(value: TableT['fields'][typeof fieldName]): void {
           if (this.attributes[fieldName].value !== value) {
