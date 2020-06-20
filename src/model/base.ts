@@ -5,6 +5,8 @@ import { Persistence } from './persistence';
 import { AnyField, Table } from '../utils';
 import { With } from '../decorators/with';
 
+import { container } from '../container';
+
 export interface BaseModel<TableT extends Table=Table> extends
   ModelInstanceInterface<TableT>,
   Dirty<TableT>,
@@ -26,4 +28,8 @@ export abstract class BaseModel<TableT extends Table=Table> {
 
   // TODO: Maybe move that to a constructor
   public newRecord = true;
+
+  public async validate(): Promise<void> {
+    await container.validateFunction(this);
+  }
 }

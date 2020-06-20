@@ -1,7 +1,9 @@
 import 'reflect-metadata';
 
+import { validateOrReject } from 'class-validator';
+
 import { BaseAdapter, PostgresConnectionParameters } from './adapters';
-import { container } from './container';
+import { container, ValidationFunction } from './container';
 import { Schema } from './schema';
 
 type Adapter = 'postgres';
@@ -11,6 +13,7 @@ type Adapter = 'postgres';
 type InitializeOptions = {
   adapterName: Adapter;
   schema: Schema;
+  validateFunction?: ValidationFunction;
 } & PostgresConnectionParameters;
 
 /**
@@ -38,10 +41,22 @@ export async function initialize({
     }
   }
 
+  let validateFunction: ValidationFunction;
+
+  if (config.validateFunction) {
+    validateFunction = config.validateFunction;
+  } else {
+    // eslint-disable-next-line max-len
+    validateFunction = async function validate<M>(instance: M): Promise<void> {
+      await validateOrReject(instance);
+    };
+  }
+
   adapter.connect();
 
   container.adapter = adapter;
   container.schema = schema;
+  container.validateFunction = validateFunction;
 }
 
 export * from './decorators';
