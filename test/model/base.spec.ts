@@ -26,7 +26,7 @@ describe(BaseModel, () => {
       }),
       host: process.env.POSTGRES_HOST,
       port: +process.env.POSTGRES_PORT,
-      username: process.env.POSTGRES_USERNAME,
+      user: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
     });
@@ -40,7 +40,14 @@ describe(BaseModel, () => {
     test('Should throw validation Error on age smaller than 18', async () => {
       const user = new User;
       user.age = 17;
-      expect(user.validate()).rejects.toBeInstanceOf(ValidationError);
+
+      try {
+        await user.validate();
+
+        throw new Error('should fail after validation');
+      } catch (e) {
+        expect(e[0]).toBeInstanceOf(ValidationError);
+      }
     });
 
     test('Should not throw an Error on age atleast 18', async () => {
