@@ -16,19 +16,11 @@ class User extends BaseModel {
 
 describe(BaseModel, () => {
   beforeAll(() => {
-    if (!process.env.POSTGRES_PORT) {
-      throw new Error('process.env.POSTGRES_PORT is undefined');
-    }
     initialize({
-      adapterName: 'postgres',
+      adapterName: 'dummy',
       schema: defineSchema({
         version: 123,
       }),
-      host: process.env.POSTGRES_HOST,
-      port: +process.env.POSTGRES_PORT,
-      user: process.env.POSTGRES_USERNAME,
-      password: process.env.POSTGRES_PASSWORD,
-      database: process.env.POSTGRES_DATABASE,
     });
   });
 

@@ -6,7 +6,7 @@ import { BaseAdapter, PostgresConnectionParameters } from './adapters';
 import { container, ValidationFunction } from './container';
 import { Schema } from './schema';
 
-type Adapter = 'postgres';
+type Adapter = 'postgres' | 'dummy';
 
 // TODO:
 // - Depending on the adapterName join this type dynamically with adapter specific option
@@ -31,6 +31,14 @@ export async function initialize({
       const { PostgresAdapter } = await import('./adapters/postgres');
 
       adapter = new PostgresAdapter(config);
+
+      break;
+    }
+
+    case 'dummy': {
+      const { DummyAdapter } = await import('./adapters/dummy');
+
+      adapter = new DummyAdapter;
 
       break;
     }
