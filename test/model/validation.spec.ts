@@ -1,6 +1,7 @@
-import { Min, ValidationError } from 'class-validator';
+import { Min } from 'class-validator';
 
 import { BaseModel } from '../../src/model/base';
+import { Validation } from '../../src/model/validation';
 import { initialize } from '../../src';
 import { container } from '../../src/container';
 import { Field } from '../../src/decorators/field';
@@ -14,7 +15,7 @@ class User extends BaseModel {
   public age!: number;
 }
 
-describe(BaseModel, () => {
+describe(Validation, () => {
   beforeAll(() => {
     initialize({
       adapterName: 'dummy',
@@ -33,19 +34,18 @@ describe(BaseModel, () => {
       const user = new User;
       user.age = 17;
 
-      try {
-        await user.validate();
-
-        throw new Error('should fail after validation');
-      } catch (e) {
-        expect(e[0]).toBeInstanceOf(ValidationError);
-      }
+      const errors = await user.validate();
+      expect(errors.success).toEqual(false);
+      expect(errors.errors).toHaveProperty('age');
     });
 
     test('Should not throw an Error on age atleast 18', async () => {
       const user = new User;
       user.age = 19;
-      await user.validate();
+
+      const errors = await user.validate();
+      expect(errors.success).toEqual(true);
+      expect(errors.errors).toBeUndefined();
     });
   });
 });
