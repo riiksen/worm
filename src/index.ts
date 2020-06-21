@@ -1,10 +1,12 @@
 import 'reflect-metadata';
 
-import { validateOrReject } from 'class-validator';
+import { validate } from 'class-validator';
 
 import { BaseAdapter, PostgresConnectionParameters } from './adapters';
-import { container, ValidationFunction } from './container';
+import { container, ValidationFunction, ValidationResult } from './container';
 import { Schema } from './schema';
+import { Table } from './utils';
+import { BaseModel } from './model';
 
 type Adapter = 'postgres' | 'dummy';
 
@@ -13,13 +15,15 @@ type Adapter = 'postgres' | 'dummy';
 type InitializeOptions = {
   adapterName: Adapter;
   schema: Schema;
-  validateFunction?: ValidationFunction;
+  validator?: ValidationFunction;
 } & PostgresConnectionParameters;
 
 /**
  * Setups a database connection and initializes whole orm
  */
-export async function initialize({
+export async function initialize<
+  M extends BaseModel=BaseModel
+>({
   adapterName,
   schema,
   ...config
@@ -49,22 +53,35 @@ export async function initialize({
     }
   }
 
-  let validateFunction: ValidationFunction;
+  let validator: ValidationFunction<M> =
+    async function validateFunction<M>(instance: M): Promise<ValidationResult> {
+      const validationResult: ValidationResult = { success: true };
+      const errors = await validate(instance);
+      if (errors.length > 0) {
+        validationResult.success = false;
 
-  if (config.validateFunction) {
-    validateFunction = config.validateFunction;
-  } else {
-    // eslint-disable-next-line max-len
-    validateFunction = async function validate<M>(instance: M): Promise<void> {
-      await validateOrReject(instance);
+        errors.forEach((error) => {
+          validationResult.errors = {};
+          const propertyKey: keyof Table['fields'] = error.property;
+          if (!validationResult.errors[propertyKey]) {
+            validationResult.errors[propertyKey] = {
+              constraints: error.constraints || {},
+            };
+          }
+        });
+      }
+      return validationResult;
     };
+
+  if (config.validator) {
+    validator = config.validator;
   }
 
   adapter.connect();
 
   container.adapter = adapter;
   container.schema = schema;
-  container.validateFunction = validateFunction;
+  container.validator = validator;
 }
 
 export * from './decorators';
