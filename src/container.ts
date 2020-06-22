@@ -1,18 +1,6 @@
 import { BaseAdapter } from './adapters/base';
 import { Schema } from './schema';
-import { Table } from './utils';
-
-export type ValidationResult<TableT extends Table=Table> = {
-  success: boolean;
-  errors?: {
-    [K in keyof TableT['fields']]?: {
-      constraints: Record<string, string>;
-    }
-  }
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ValidationFunction<M=any> = (instance: M) => Promise<ValidationResult>;
+import { Validation, Validator } from './model';
 
 /**
  * Container that holds a user provided data or state which is derived from user provided data
@@ -22,7 +10,7 @@ class Container {
 
   #schema?: Schema;
 
-  #validator?: ValidationFunction;
+  #validator?: Validator;
 
   get adapter(): BaseAdapter {
     if (this.#adapter) {
@@ -54,7 +42,7 @@ class Container {
     this.#schema = schema;
   }
 
-  get validator(): ValidationFunction {
+  get validator(): Validator {
     if (this.#validator) {
       return this.#validator;
     }
@@ -63,8 +51,9 @@ class Container {
     throw new Error('no validate function');
   }
 
-  set validator(validateFunction: ValidationFunction) {
-    this.#validator = validateFunction;
+  set validator(validator: Validator) {
+    this.#validator = validator;
+    Validation.validator = validator;
   }
 }
 
