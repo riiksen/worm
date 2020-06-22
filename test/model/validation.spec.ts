@@ -1,12 +1,16 @@
 import { Min } from 'class-validator';
 
-import { BaseModel } from '../../src/model/base';
-import { Validation } from '../../src/model/validation';
-import { initialize } from '../../src';
-import { container, ValidationResult } from '../../src/container';
-import { Field } from '../../src/decorators/field';
-import { Model } from '../../src/decorators/model';
-import { defineSchema } from '../../src/schema';
+import {
+  defineSchema,
+  initialize,
+  BaseModel,
+  Field,
+  Model,
+  ModelInstanceInterface,
+  Validation,
+  ValidationResult,
+} from '../../src';
+import { container } from '../../src/container';
 
 @Model()
 class User extends BaseModel {
@@ -34,9 +38,7 @@ describe(Validation, () => {
   beforeAll(() => {
     initialize({
       adapterName: 'dummy',
-      schema: defineSchema({
-        version: 123,
-      }),
+      schema: defineSchema({}),
     });
   });
 
@@ -44,13 +46,14 @@ describe(Validation, () => {
     await container.adapter.disconnect();
   });
 
-  describe('#validate', () => {
-    describe('default validator', () => {
-      test('Should have age property in errors if passed age is less than 18', async () => {
+  describe('with default validator', () => {
+    describe('#validate', () => {
+      test('Should include age property in errors if age is less than 18', async () => {
         const user = new User;
         user.age = 17;
 
         const { success, errors } = await user.validate();
+
         expect(success).toBeFalsy();
         expect(errors).toHaveProperty('age');
       });
@@ -64,41 +67,47 @@ describe(Validation, () => {
         expect(errors).toBeUndefined();
       });
     });
+  });
 
-    describe('custom validator', () => {
-      beforeAll(() => {
-        initialize({
-          adapterName: 'dummy',
-          schema: defineSchema({
-            version: 123,
-          }),
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          validator: async (instance: any): Promise<ValidationResult> => {
-            const validationResult: ValidationResult = { success: true };
-            const errors: CustomValidationError[] = [];
-            if (instance.evenNumber % 2 !== 0) {
-              errors.push(
-                new CustomValidationError({
-                  mustBeEvenNumber: 'property evenNumber must be even',
-                }, 'evenNumber'),
-              );
-            }
-            if (errors.length > 0) {
-              validationResult.success = false;
-              const errorsObject: typeof validationResult['errors'] = {};
-              Object.values(errors).forEach((error) => {
-                errorsObject[error.property] = {
-                  constraints: error.constraints,
-                };
-              });
-              validationResult.errors = errorsObject;
-            }
-            return validationResult;
-          },
-        });
+  describe('with custom validator', () => {
+    beforeAll(() => {
+      const customValidator = async <M extends ModelInstanceInterface>(
+        instance: M,
+      ): Promise<ValidationResult> => {
+        const validationResult: ValidationResult = { success: true };
+        const errors: CustomValidationError[] = [];
+
+        if ((instance as unknown as User).evenNumber % 2 !== 0) {
+          errors.push(
+            new CustomValidationError({
+              mustBeEvenNumber: 'property evenNumber must be even',
+            }, 'evenNumber'),
+          );
+        }
+
+        if (errors.length) {
+          validationResult.success = false;
+          const errorsObject: typeof validationResult['errors'] = {};
+
+          Object.values(errors).forEach((error) => {
+            errorsObject[error.property] = error.constraints;
+          });
+
+          validationResult.errors = errorsObject;
+        }
+
+        return validationResult;
+      };
+
+      initialize({
+        adapterName: 'dummy',
+        schema: defineSchema({}),
+        validator: customValidator,
       });
+    });
 
-      test('Should have evenNumber property in errors if passed number is not even', async () => {
+    describe('#validate', () => {
+      test('Should include evenNumber property in errors if number is not even', async () => {
         const user = new User;
         user.evenNumber = 1;
 
