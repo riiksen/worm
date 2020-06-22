@@ -1,29 +1,25 @@
 import 'reflect-metadata';
 
-import { validate } from 'class-validator';
-
 import { BaseAdapter, PostgresConnectionParameters } from './adapters';
-import { container, ValidationFunction, ValidationResult } from './container';
+import { container } from './container';
+import { Validator } from './model';
 import { Schema } from './schema';
-import { Table } from './utils';
-import { BaseModel } from './model';
 
 type Adapter = 'postgres' | 'dummy';
 
 // TODO:
 // - Depending on the adapterName join this type dynamically with adapter specific option
+// - Make the schema not required
 type InitializeOptions = {
   adapterName: Adapter;
   schema: Schema;
-  validator?: ValidationFunction;
+  validator?: Validator;
 } & PostgresConnectionParameters;
 
 /**
  * Setups a database connection and initializes whole orm
  */
-export async function initialize<
-  M extends BaseModel=BaseModel
->({
+export async function initialize({
   adapterName,
   schema,
   ...config
@@ -53,35 +49,14 @@ export async function initialize<
     }
   }
 
-  let validator: ValidationFunction<M> =
-    async function validateFunction<M>(instance: M): Promise<ValidationResult> {
-      const validationResult: ValidationResult = { success: true };
-      const errors = await validate(instance);
-      if (errors.length > 0) {
-        validationResult.success = false;
-
-        errors.forEach((error) => {
-          validationResult.errors = {};
-          const propertyKey: keyof Table['fields'] = error.property;
-          if (!validationResult.errors[propertyKey]) {
-            validationResult.errors[propertyKey] = {
-              constraints: error.constraints || {},
-            };
-          }
-        });
-      }
-      return validationResult;
-    };
-
-  if (config.validator) {
-    validator = config.validator;
-  }
-
   adapter.connect();
 
   container.adapter = adapter;
   container.schema = schema;
-  container.validator = validator;
+
+  if (config.validator) {
+    container.validator = config.validator;
+  }
 }
 
 export * from './decorators';
