@@ -12,7 +12,6 @@ export class PostgresAdapter extends BaseAdapter {
   constructor(connectionParameters: PostgresConnectionParameters) {
     super();
 
-    // TODO: user is in user property instead username, change it
     this.connection = new Client({
       ...connectionParameters,
     });
