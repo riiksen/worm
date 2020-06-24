@@ -1,6 +1,7 @@
 import { Dirty } from './dirty';
 import { ModelInstanceInterface } from './instance_interface';
 import { Persistence } from './persistence';
+import { Validation } from './validation';
 
 import { AnyField, Table } from '../utils';
 import { With } from '../decorators/with';
@@ -8,9 +9,10 @@ import { With } from '../decorators/with';
 export interface BaseModel<TableT extends Table=Table> extends
   ModelInstanceInterface<TableT>,
   Dirty<TableT>,
-  Persistence<TableT> {}
+  Persistence<TableT>,
+  Validation<TableT> {}
 
-@With([Dirty, Persistence])
+@With([Dirty, Persistence, Validation])
 export abstract class BaseModel<TableT extends Table=Table> {
   ['constructor']: typeof BaseModel;
 

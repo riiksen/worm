@@ -2,15 +2,18 @@ import 'reflect-metadata';
 
 import { BaseAdapter, PostgresConnectionParameters } from './adapters';
 import { container } from './container';
+import { Validator } from './model';
 import { Schema } from './schema';
 
-type Adapter = 'postgres';
+type Adapter = 'postgres' | 'dummy';
 
 // TODO:
 // - Depending on the adapterName join this type dynamically with adapter specific option
+// - Make the schema not required
 type InitializeOptions = {
   adapterName: Adapter;
   schema: Schema;
+  validator?: Validator;
 } & PostgresConnectionParameters;
 
 /**
@@ -32,6 +35,14 @@ export async function initialize({
       break;
     }
 
+    case 'dummy': {
+      const { DummyAdapter } = await import('./adapters/dummy');
+
+      adapter = new DummyAdapter;
+
+      break;
+    }
+
     default: {
       // TODO: Custom error
       throw new Error;
@@ -42,6 +53,10 @@ export async function initialize({
 
   container.adapter = adapter;
   container.schema = schema;
+
+  if (config.validator) {
+    container.validator = config.validator;
+  }
 }
 
 export * from './decorators';

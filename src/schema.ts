@@ -80,6 +80,7 @@ export interface DefineSchemaOptions {
   version?: number;
 }
 
+// TODO: Make the schema options nullable
 export function defineSchema(
   { version }: DefineSchemaOptions,
 ): Schema {

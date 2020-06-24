@@ -12,7 +12,7 @@ describe(Model, () => {
   let user: User;
 
   beforeAll(() => {
-    user = new User();
+    user = new User;
   });
 
   test('Should set model name to lowercase class name if not provided', () => {

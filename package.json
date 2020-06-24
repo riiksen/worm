@@ -8,6 +8,7 @@
     "test": "yarn run jest"
   },
   "dependencies": {
+    "class-validator": "^0.12.2",
     "pg": "^8.2.1",
     "reflect-metadata": "^0.1.13"
   },

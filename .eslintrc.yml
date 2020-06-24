@@ -12,6 +12,11 @@ globals:
   Atomics: readonly
   SharedArrayBuffer: readonly
 
+overrides:
+  - files: [test/**/*.spec.ts]
+    rules:
+      max-classes-per-file: off
+
 parser: '@typescript-eslint/parser'
 parserOptions:
   sourceType: module
